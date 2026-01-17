@@ -88,18 +88,22 @@ export default function AdminPage() {
     if (!adminKey) return;
     setLoading(true);
     try {
-      const [statsData, aliasData, domainData, logData] = await Promise.all([
+      const results = await Promise.allSettled([
         fetchWithAdmin('/api/admin/stats'),
         fetchWithAdmin('/api/admin/aliases'),
         fetchWithAdmin('/api/admin/domains'),
         fetchWithAdmin('/api/admin/logs?limit=50')
       ]);
-      setStats(statsData);
-      setAliases(aliasData.aliases || []);
-      setDomains(domainData.domains || []);
-      setLogs(logData.logs || []);
+
+      const [statsRes, aliasesRes, domainsRes, logsRes] = results;
+      if (statsRes.status === 'fulfilled') setStats(statsRes.value);
+      if (aliasesRes.status === 'fulfilled') setAliases(aliasesRes.value.aliases || []);
+      if (domainsRes.status === 'fulfilled') setDomains(domainsRes.value.domains || []);
+      if (logsRes.status === 'fulfilled') setLogs(logsRes.value.logs || []);
+
+      const anyError = results.some((r) => r.status === 'rejected');
       setStatus('connected');
-      setToast('✓ Data loaded successfully');
+      setToast(anyError ? '⚠ Some data failed to load' : '✓ Data loaded successfully');
     } catch (err) {
       console.error(err);
       setStatus('disconnected');

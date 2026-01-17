@@ -736,5 +736,10 @@
     "action": "admin_unauthorized",
     "ip": "::1",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+  },
+  {
+    "timestamp": "2026-01-17T10:57:36.619Z",
+    "action": "domain_added",
+    "domain": "pbs.web.id"
   }
 ]
