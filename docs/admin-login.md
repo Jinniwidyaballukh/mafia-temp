@@ -3,7 +3,7 @@
 ## Ringkasan
 - Halaman login admin: `/admin/login`
 - Proteksi admin: `/admin` akan redirect ke `/admin/login` jika belum login Supabase
-- Login provider: Google via Supabase OAuth
+- Login dengan **email & password Supabase Auth** (bukan Google)
 - Supabase yang dipakai (publishable):
   - URL: `https://xkacsdvkpniafudevwvq.supabase.co`
   - ANON/PUBLISHABLE KEY: `sb_publishable_BpsbHQApiJVo41bccRj3-g_MgL6Ck2X`
@@ -19,9 +19,9 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_BpsbHQApiJVo41bccRj3-g_MgL6Ck2X
 
 ## Alur Login
 1) Buka `/admin/login`
-2) Klik **"Login dengan Google"** → diarahkan ke Google OAuth via Supabase
-3) Setelah sukses, Supabase redirect ke `/admin`
-4) Admin page akan cek session Supabase, jika ada → lanjut load data; jika tidak → redirect kembali ke `/admin/login`
+2) Isi email & password Supabase (Auth password) → klik **Login Admin**
+3) Setelah sukses, diarahkan ke `/admin`
+4) Admin page cek session Supabase, jika ada → lanjut load data; jika tidak → redirect ke `/admin/login`
 
 ## File Baru/Diubah
 - `lib/supabaseClient.js`

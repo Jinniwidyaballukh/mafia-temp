@@ -9,6 +9,8 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     const checkSession = async () => {
@@ -20,19 +22,17 @@ export default function AdminLoginPage() {
     checkSession();
   }, [router]);
 
-  const handleGoogleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     try {
       setLoading(true);
       setError('');
-      const { data, error: authError } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/admin`
-        }
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password
       });
       if (authError) throw authError;
-      // User will be redirected by Supabase
-      if (!data?.url) setError('Gagal memulai login Google.');
+      router.replace('/admin');
     } catch (err) {
       setError(err.message || 'Login gagal');
     } finally {
@@ -52,7 +52,7 @@ export default function AdminLoginPage() {
                 </div>
                 <div>
                   <h5 className="mb-0">Admin Login</h5>
-                  <small className="text-muted">Gunakan akun Google untuk akses admin</small>
+                  <small className="text-muted">Masuk dengan email & password Supabase</small>
                 </div>
               </div>
 
@@ -62,22 +62,44 @@ export default function AdminLoginPage() {
                 </div>
               )}
 
-              <button
-                className="btn btn-primary w-100 mb-3"
-                onClick={handleGoogleLogin}
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
-                    Mengarahkan...
-                  </>
-                ) : (
-                  <>
-                    <i className="bi bi-google me-2" /> Login dengan Google
-                  </>
-                )}
-              </button>
+              <form onSubmit={handleLogin} className="d-grid gap-3">
+                <div>
+                  <label className="form-label">Email</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    placeholder="admin@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="form-label">Password</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="btn btn-primary w-100"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                      Masuk...
+                    </>
+                  ) : (
+                    'Login Admin'
+                  )}
+                </button>
+              </form>
 
               <div className="d-flex align-items-center justify-content-between">
                 <Link href="/" className="text-decoration-none">
